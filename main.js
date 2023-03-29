@@ -1,10 +1,20 @@
+// Trabajando con Axios solo en la section de saveFavoriteCat
+const api = axios.create({
+  baseURL: "https://api.thecatapi.com/v1",
+});
+
+api.defaults.headers.common["X-API-KEY"] =
+  "live_t4IEUVeayUcsTaOxbSn1t6BVAGJ25CkbyMJIkicEvl90cwcy9OfFLhGypTvu0pDX";
+
+// ***********************************************************************
 const API = "https://api.thecatapi.com/v1";
 const API_KEY =
   "live_t4IEUVeayUcsTaOxbSn1t6BVAGJ25CkbyMJIkicEvl90cwcy9OfFLhGypTvu0pDX";
-const API_URL_RANDOM = `${API}/images/search?limit=10&order=rand&api_key=${API_KEY}`;
-const API_URL_FAVORITES = `${API}/favourites?api_key=${API_KEY}`;
+const API_URL_RANDOM = `${API}/images/search?limit=10&order=rand`;
+const API_URL_FAVORITES = `${API}/favourites`;
 const API_URL_FAVORITES_DELETE = (id) =>
   `${API}/favourites/${id}?api_key=${API_KEY}`;
+const API_URL_UPLOAD = `${API}/images/upload`;
 
 const spanError = document.getElementById("error");
 
@@ -36,7 +46,12 @@ async function loadRandomCats() {
 }
 
 async function loadFavoriteCats() {
-  const res = await fetch(API_URL_FAVORITES);
+  const res = await fetch(API_URL_FAVORITES, {
+    method: "GET",
+    headers: {
+      "X-API-KEY": API_KEY,
+    },
+  });
   const data = await res.json();
   console.log("Load Favorite Cats", data);
 
@@ -70,30 +85,47 @@ async function loadFavoriteCats() {
 }
 
 async function saveFavoriteCat(id) {
-  const res = await fetch(API_URL_FAVORITES, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      image_id: id,
-    }),
+  // res = {data, status}
+  const { data, status } = await api.post("/favourites", {
+    image_id: id,
   });
-  const data = await res.json();
 
-  console.log("Save Favorite Cats", res);
+  // const res = await fetch(API_URL_FAVORITES, {
+  //   method: "POST",
+  //   headers: {
+  //     "X-API-KEY": API_KEY,
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({
+  //     image_id: id,
+  //   }),
+  // });
+  // const data = await res.json();
 
-  if (res.status !== 200) {
-    spanError.innerHTML = "Hubo un error: " + res.status + data.message;
+  console.log("Save Favorite Cats");
+  // console.log("Save Favorite Cats", res);
+
+  if (status !== 200) {
+    spanError.innerHTML = "Hubo un error: " + status + data.message;
   } else {
     console.log("Gatito guardado en favoritos");
     loadFavoriteCats();
   }
+
+  // if (res.status !== 200) {
+  //   spanError.innerHTML = "Hubo un error: " + res.status + data.message;
+  // } else {
+  //   console.log("Gatito guardado en favoritos");
+  //   loadFavoriteCats();
+  // }
 }
 
 async function deleteFavoriteCat(id) {
   const res = await fetch(API_URL_FAVORITES_DELETE(id), {
     method: "DELETE",
+    headers: {
+      "X-API-KEY": API_KEY,
+    },
   });
   const data = await res.json();
 
@@ -107,19 +139,47 @@ async function deleteFavoriteCat(id) {
   }
 }
 
+async function uploadCatPhoto() {
+  const form = document.getElementById("uploadingForm");
+  const formData = new FormData(form);
+
+  console.log(formData.get("file"));
+
+  const res = await fetch(API_URL_UPLOAD, {
+    method: "POST",
+    headers: {
+      // "Content-Type": "multipart/form-data",
+      "X-API-KEY": API_KEY,
+    },
+    body: formData,
+  });
+  const data = await res.json();
+
+  if (res.status !== 201) {
+    spanError.innerHTML = "Hubo un error: " + res.status + data.message;
+    console.log({ data });
+  } else {
+    console.log("Foto de michi subida :)");
+    console.log({ data });
+    console.log(data.url);
+    saveFavoriteCat(data.id);
+  }
+}
+
+const previewImage = () => {
+  const file = document.getElementById("file").files;
+  console.log(file);
+
+  if (file.length > 0) {
+    const fileReader = new FileReader();
+
+    fileReader.onload = function (e) {
+      document.getElementById("preview").setAttribute("src", e.target.result);
+    };
+
+    fileReader.readAsDataURL(file[0]);
+  }
+};
+
 loadRandomCats();
 loadFavoriteCats();
-
-// ***************************************************************
-// fetch(URL)
-//   .then((res) => res.json())
-//   .then((data) => {
-//     const img = document.querySelector("img");
-//     img.src = data[0].url;
-//   });
-
-// En este caso es mejor usar for si tienen un index *****
-// const img1 = document.getElementById("img1");
-// const img2 = document.getElementById("img2");
-// img1.src = data[0].url;
-// img2.src = data[1].url;
