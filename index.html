@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>The Cat API</title>
+  </head>
+  <body>
+    <section class="section">
+      <h1>Gatitos App</h1>
+
+      <span id="error"></span>
+
+      <div class="container-cats">
+        <h2>Gatitos Aleatorios</h2>
+
+        <div id="random-cats" class="grid-container">
+          <div>
+            <img alt="cats" class="images" />
+            <button id="btn-random-1" class="btn-cats">
+              Guardar en favoritos
+            </button>
+          </div>
+          <div>
+            <img alt="cats" class="images" />
+            <button id="btn-random-2" class="btn-cats">
+              Guardar en favoritos
+            </button>
+          </div>
+          <div>
+            <img alt="cats" class="images" />
+            <button id="btn-random-3" class="btn-cats">
+              Guardar en favoritos
+            </button>
+          </div>
+        </div>
+        <div class="btn-container">
+          <button onclick="loadRandomCats()" class="btn-cats">
+            Recargar Gatitos
+          </button>
+        </div>
+      </div>
+
+      <div id="favorite-cats" class="container-cats">
+        <h2>Gatitos Favoritos</h2>
+
+        <div class="grid-container">
+          <!-- <div>
+            <img alt="cats" class="images" />
+            <button onclick="removeCat()" class="btn-cats">
+              Eliminar de favoritos
+            </button>
+          </div>
+          <div>
+            <img alt="cats" class="images" />
+            <button onclick="removeCat()" class="btn-cats">
+              Eliminar de favoritos
+            </button>
+          </div>
+          <div>
+            <img alt="cats" class="images" />
+            <button onclick="removeCat()" class="btn-cats">
+              Eliminar de favoritos
+            </button>
+          </div> -->
+        </div>
+        <div class="btn-container">
+          <button onclick="loadFavoriteCats()" class="btn-cats">
+            Mostrar Favoritos
+          </button>
+        </div>
+      </div>
+
+      <!-- <div class="container-cats">
+        <h2>Remover Gatitos de Favoritos</h2>
+        <div class="grid-container">
+          <div>
+            <img id="img" alt="cats" class="images" />
+            <button onclick="remove()" class="btn-cats">
+              Remover gatito de favoritos
+            </button>
+          </div>
+          <div>
+            <img id="img" alt="cats" class="images" />
+            <button onclick="remove()" class="btn-cats">
+              Remover gatito de favoritos
+            </button>
+          </div>
+        </div>
+      </div> -->
+    </section>
+
+    <script src="./main.js"></script>
+  </body>
+</html>
